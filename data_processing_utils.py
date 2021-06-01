@@ -115,5 +115,4 @@ def auto_make_target_encoding(data, col_name, encodings):
     return data 
 
 def select_cols(data, columns): 
-    data = data.copy()
     return data[columns]
