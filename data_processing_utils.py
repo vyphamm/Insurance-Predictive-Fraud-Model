@@ -80,6 +80,7 @@ def ohe_name(data, target, expected_names):
     """
     data = data.copy()
     oh_enc = OneHotEncoder()
+    expected_names = set(expected_names)
     data[target] = data[target].apply(lambda x: x if x in expected_names else "other")
     oh_enc.fit(data[[target]]) # determine specific values that a categorical feature can take
     dummies = pd.DataFrame(oh_enc.transform(data[["name"]]).todense(), 
