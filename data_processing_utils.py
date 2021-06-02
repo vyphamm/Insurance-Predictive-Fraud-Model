@@ -3,7 +3,9 @@ import pandas as pd
 import regex as re
 import calendar
 from sklearn.preprocessing import OneHotEncoder
-
+"""
+By : Vy Khanh Pham 
+"""
 
 def process_data_gm(data, pipeline_functions, prediction_col):
     """Process the data for a guided model."""
@@ -59,9 +61,10 @@ def extract_month_hour(data, lossdate_col):
     """
     # Convert to datetime and extract necessary features 
     data = data.copy()
-    data['lossdatetime'] = data[lossdate_col].apply(pd.to_datetime)
-    data['month'] = data['lossdatetime'].apply(lambda x:x.month)
-    data['hour'] = data['lossdatetime'].apply(lambda x: x.hour)
+    data[lossdate_col] = data[lossdate_col].apply(pd.to_datetime)
+    data['month'] = data[lossdate_col].apply(lambda x:x.month)
+    data['hour'] = data[lossdate_col].apply(lambda x: x.hour)
+    data = data.drop(lossdate_col, axis = 1)
     return data 
 
 def damage_ordinal_encoding(data):

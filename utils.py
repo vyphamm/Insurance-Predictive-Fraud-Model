@@ -11,12 +11,20 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def oversample(X, y, percentage):
+    """
+    Oversample with dataset with given percentage. 
+    """
     over_sample = RandomOverSampler(sampling_strategy=percentage)
     return over_sample.fit_resample(X, y)
 
-def compute_CV_recall(model, metric, X_train, Y_train, oversample_percent): 
-    kf = KFold(n_splits = 4)
-    validation_errors = []
+def compute_CV(model, metric, X_train, Y_train, oversample_percent, num_splits):
+    """
+        Oversample the minority class in X_train by oversample_precent of the majority class. 
+        Perform num_splits of folds and compute the scores based on the given metric. 
+        Returns the average scores for all splits. 
+    """
+    kf = KFold(n_splits = num_splits)
+    scores = []
     for train_idx, valid_idx in kf.split(X_train):
         # split the data
         split_X_train, split_X_valid = X_train.iloc[train_idx], X_train.iloc[valid_idx]
@@ -28,16 +36,22 @@ def compute_CV_recall(model, metric, X_train, Y_train, oversample_percent):
 
         # Compute the RMSE on the validation split
         error = metric(split_Y_valid, model.predict(split_X_valid))
-        validation_errors.append(error)
-    return np.mean(validation_errors)
+        scores.append(error)
+    return np.mean(scores)
 
-def display_report(model, X_train, Y_train, X_test, Y_test): 
+def display_report(model, X_train, Y_train, X_test, Y_test):
+    """
+    Display metrics/score for a given model. 
+    """
     print("Training Accuracy: ", model.score(X_train, Y_train))
     print('Testing Accuracy: ', model.score(X_test, Y_test))
     cr = classification_report(Y_test,  model.predict(X_test))
     print(cr)
     
-def display_ROC(Y_actual, Y_pred): 
+def display_ROC(Y_actual, Y_pred):
+    """
+    Display the ROC curve using Y_pred and Y_actual.
+    """
     fpr, tpr, threshold = metrics.roc_curve(Y_actual, Y_pred)
     roc_auc = metrics.auc(fpr, tpr)
     f, ax = plt.subplots(figsize=(3, 3))
