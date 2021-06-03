@@ -21,7 +21,9 @@ def process_data_gm(data, pipeline_functions, prediction_col):
     return X, y 
 
 def remove_duplicates_and_full_nulls(data):
-    """Remove any duplicates or rows with all null entries"""
+    """
+    Remove any duplicates or rows with all null entries and return the dataframe.
+    """
     data = data.copy()
     data = data.drop_duplicates()
     data = data.dropna(how ='all')
@@ -39,6 +41,9 @@ def fill_drop_null_entries(data, col_mappings):
     return data 
 
 def clean_name(data):
+    """
+    Procses the `name` column and return the dataframe
+    """
     data = data.copy() 
     # Process the `name` column. 
     data['name'] = (data['name']
@@ -50,7 +55,9 @@ def clean_name(data):
     return data 
 
 def clean_auto_make(data): 
-    # Process `auto_make`
+    """
+    Process `auto_make` and return the dataframe. 
+    """
     data = data.copy()
     data['auto_make'] = data['auto_make'].str.replace("SUBUWU", "SUBARU").str.lower() # UWU
     return data 
@@ -70,7 +77,9 @@ def extract_month_hour(data, lossdate_col):
 def damage_ordinal_encoding(data):
     """Perform Ordinal Encoding on the damage Column"""
     data = data.copy()
-    damages = ("Total Loss", "Major Damage", "Minor Damage", "Trivial Damage", "NA")
+    damages = ("Total Loss", "Major Damage", 
+               "Minor Damage", "Trivial Damage", 
+               "NA")
     damagesEncode = (4, 3, 2, 1, -1)
     data['incident_severity'] = data['incident_severity'].replace(damages,damagesEncode)
     return data

@@ -10,6 +10,10 @@ from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+"""
+By : Vy Khanh Pham 
+"""
 def oversample(X, y, percentage):
     """
     Oversample with dataset with given percentage. 
