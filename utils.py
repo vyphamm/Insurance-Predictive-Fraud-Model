@@ -14,9 +14,10 @@ import seaborn as sns
 """
 By : Vy Khanh Pham 
 """
+
 def oversample(X, y, percentage):
     """
-    Oversample with dataset with given percentage. 
+    Oversample the minority class in the dataset with given percentage. 
     """
     over_sample = RandomOverSampler(sampling_strategy=percentage)
     return over_sample.fit_resample(X, y)
@@ -38,7 +39,7 @@ def compute_CV(model, metric, X_train, Y_train, oversample_percent, num_splits):
         split_X_train, split_Y_train = oversample(split_X_train, split_Y_train, oversample_percent)
         model.fit(split_X_train, split_Y_train.to_numpy())
 
-        # Compute the RMSE on the validation split
+        # Compute the metric on the validation split
         error = metric(split_Y_valid, model.predict(split_X_valid))
         scores.append(error)
     return np.mean(scores)

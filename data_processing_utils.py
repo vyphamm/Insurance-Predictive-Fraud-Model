@@ -80,7 +80,7 @@ def damage_ordinal_encoding(data):
     damages = ("Total Loss", "Major Damage", 
                "Minor Damage", "Trivial Damage", 
                "NA")
-    damagesEncode = (4, 3, 2, 1, -1)
+    damagesEncode = (4, 3, 2, 1, 1)
     data['incident_severity'] = data['incident_severity'].replace(damages,damagesEncode)
     return data
 
@@ -95,7 +95,7 @@ def ohe_name(data, target, expected_names):
     expected_names = set(expected_names)
     data[target] = data[target].apply(lambda x: x if x in expected_names else "other")
     oh_enc.fit(data[[target]]) # determine specific values that a categorical feature can take
-    dummies = pd.DataFrame(oh_enc.transform(data[["name"]]).todense(), 
+    dummies = pd.DataFrame(oh_enc.transform(data[[target]]).todense(), 
                        columns = oh_enc.get_feature_names(),
                        index = data.index
                 )
@@ -115,16 +115,16 @@ def make_ohe_required_cols(data, columns):
     return data 
         
     
-def auto_make_target_encoding(data, col_name, encodings): 
-    """ Target encode automake."""
-    def determine_encoding(x):
+def encode(data, col_name, encodings): 
+    """ Ecode values in dataframe with col_name based on the encodings dictionary"""
+    def determine_encoding(x, default):
         try: 
             return encodings[x]
         except:
-            return np.mean(list(encodings.values()))
-    
+            return default
+    avg = np.mean(list(encodings.values()))
     data = data.copy()
-    data[col_name] = data[col_name].apply(lambda x: determine_encoding(x))
+    data[col_name] = data[col_name].apply(lambda x: determine_encoding(x, avg))
     return data 
 
 def select_cols(data, columns): 
